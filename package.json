@@ -1,13 +1,15 @@
 {
   "name": "ng-mdl",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC",
+  "author": [
+    "Dominik Winter <dominik.winter92@gmail.com>"
+  ],
+  "license": "MIT",
   "devDependencies": {
     "gulp": "^3.9.1",
     "gulp-concat": "^2.6.0",
