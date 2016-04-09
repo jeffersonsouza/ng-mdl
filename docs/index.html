@@ -1,0 +1,201 @@
+<!doctype html>
+<!--
+  Material Design Lite
+  Copyright 2015 Google Inc. All rights reserved.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      https://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="description" content="A front-end template that helps you build fast, modern mobile web apps.">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ng-mdl</title>
+
+  <link href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="vendor/material-design-lite/material.min.css">
+  <link rel="stylesheet" href="css/styles.css">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/styles/github.min.css">
+</head>
+
+<body class="mdl-demo mdl-color--grey-100 mdl-color-text--grey-700 mdl-base" ng-app="app">
+  <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+    <header class="mdl-layout__header mdl-layout__header--scroll mdl-color--primary">
+      <div class="mdl-layout--large-screen-only mdl-layout__header-row"></div>
+      <div class="mdl-layout--large-screen-only mdl-layout__header-row">
+        <h3>ng-mdl</h3>
+      </div>
+      <div class="mdl-layout--large-screen-only mdl-layout__header-row"></div>
+      <div class="mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--primary-dark">
+        <a href="#overview" class="mdl-layout__tab is-active">Overview</a>
+        <a href="#install" class="mdl-layout__tab">Install</a>
+        <a href="#config" class="mdl-layout__tab">Config</a>
+        <a href="#directives" class="mdl-layout__tab">Directives</a>
+        <a href="#upgrading_components" class="mdl-layout__tab">Upgrading Components</a>
+      </div>
+    </header>
+
+    <main class="mdl-layout__content">
+      <div class="mdl-layout__tab-panel is-active" id="overview">
+        <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
+          <header class="section__play-btn mdl-cell mdl-cell--3-col-desktop mdl-cell--2-col-tablet mdl-cell--4-col-phone mdl-color--teal-100 mdl-color-text--white"></header>
+          <div class="mdl-card mdl-cell mdl-cell--9-col-desktop mdl-cell--6-col-tablet mdl-cell--4-col-phone">
+            <div class="mdl-card__supporting-text">
+              <h4>Overview</h4>
+              Angular Material Design Lite is an angular wrapper on top of Material Design Lite.<br>
+              <br>It provides directives for most (work in progress) Material Design Components.
+            </div>
+          </div>
+        </section>
+        <br>
+        <br>
+      </div>
+      <div class="mdl-layout__tab-panel" id="install">
+        <section class="section--center mdl-grid mdl-grid--no-spacing">
+          <div class="mdl-cell mdl-cell--12-col">
+            <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
+              <header class="section__play-btn mdl-cell mdl-cell--3-col-desktop mdl-cell--2-col-tablet mdl-cell--4-col-phone mdl-color--teal-100 mdl-color-text--white" style="background-image: url('http://bower.io/img/bower-logo.png');background-color: transparent;"></header>
+              <div class="mdl-card mdl-cell mdl-cell--9-col-desktop mdl-cell--6-col-tablet mdl-cell--4-col-phone">
+                <div class="mdl-card__supporting-text">
+                  <h4>Using Bower</h4>
+                  <div hljs>$ bower install ng-mdl</div>
+                </div>
+              </div>
+            </section>
+
+            <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
+              <header class="section__play-btn mdl-cell mdl-cell--3-col-desktop mdl-cell--2-col-tablet mdl-cell--4-col-phone mdl-color--red-100 mdl-color-text--white" style="background-image: url('https://www.npmjs.com/static/images/npm-logo.svg');background-color: transparent; background-size: contain; background-repeat: no-repeat; background-position: center;"></header>
+              <div class="mdl-card mdl-cell mdl-cell--9-col-desktop mdl-cell--6-col-tablet mdl-cell--4-col-phone">
+                <div class="mdl-card__supporting-text">
+                  <h4>Using npm</h4>
+                  <div hljs>$ npm install ng-mdl</div>
+                </div>
+              </div>
+            </section>
+            <br>
+            Then require the <strong>mdl</strong> module:
+            <div hljs>angular.module('your-app', ['mdl']);</div>
+          </div>
+        </section>
+      </div>
+      <div class="mdl-layout__tab-panel" id="config">
+        <section class="section--center mdl-grid mdl-grid--no-spacing">
+          <div class="mdl-cell mdl-cell--12-col">
+            <h4>Config</h4>
+            Floating text labels and ripple effect are enabled by default.<br>
+            Here's how you can disable them:<br>
+
+            <div hljs>angular.module('your-app').config(function(mdlConfigProvider){
+  mdlConfigProvider.floating = false;
+  mdlConfigProvider.rippleEffect = false;
+});</div>
+          </div>
+        </section>
+      </div>
+      <div class="mdl-layout__tab-panel" id="directives">
+        <section class="section--center mdl-grid mdl-grid--no-spacing">
+          <div class="mdl-cell mdl-cell--12-col">
+            <h4>Text Field</h4>
+            <div hljs hljs-language="html"><mdl-text-field label="First Name" ng-model="first_name"></mdl-text-field></div>
+            <mdl-text-field label="First Name" ng-model="first_name"></mdl-text-field>
+
+            <h4>Checkbox</h4>
+            <div hljs hljs-language="html"><mdl-checkbox label="Urgent package" ng-model="is_urgent"></mdl-checkbox></div>
+            <mdl-checkbox label="Urgent package" ng-model="is_urgent"></mdl-checkbox>
+
+            <h4>Radio</h4>
+            <div hljs hljs-language="html"><mdl-radio label="Male" value="male" ng-model="gender"></mdl-radio>
+<mdl-radio label="Female" value="female" ng-model="gender"></mdl-radio></div>
+            <mdl-radio label="Male" value="male" ng-model="gender"></mdl-radio>
+            <mdl-radio label="Female" value="female" ng-model="gender"></mdl-radio>
+
+            <h4>Switch</h4>
+            <div hljs hljs-language="html"><mdl-switch label="Notifications" ng-model="show_notifications"></mdl-switch></div>
+            <mdl-switch label="Notifications" ng-model="show_notifications"></mdl-switch>
+
+            <h4>Buttons</h4>
+            <div hljs hljs-language="html"><mdl-button>Flat button</mdl-button>
+<mdl-button theme="primary">Primary Flat button</mdl-button>
+<mdl-button theme="accent">Accept Flat button</mdl-button>
+<mdl-button-raised>Raised button</mdl-button-raised>
+<mdl-button-raised theme="primary">Primary Raised button</mdl-button-raised>
+<mdl-button-raised theme="accent">Accent Raised button</mdl-button-raised></div>
+            <mdl-button>Flat button</mdl-button>
+            <mdl-button theme="primary">Primary Flat button</mdl-button>
+            <mdl-button theme="accent">Accept Flat button</mdl-button>
+            <br>
+            <mdl-button-raised>Raised button</mdl-button-raised>
+            <mdl-button-raised theme="primary">Primary Raised button</mdl-button-raised>
+            <mdl-button-raised theme="accent">Accent Raised button</mdl-button-raised>
+            <br><br><br>
+
+            <h4>Progressbars</h4>
+            <div hljs hljs-language="html"><mdl-text-field label="Dynamic Progress bar" ng-model="progress"></mdl-text-field>
+<mdl-progress progress="{{progress}}"></mdl-progress>
+<mdl-progress progress="20"></mdl-progress></div>
+            <mdl-text-field label="Dynamic Progress bar" ng-model="progress"></mdl-text-field>
+            <br><br>
+            <mdl-progress progress="{{progress}}"></mdl-progress>
+            <br>
+            <mdl-progress progress="20"></mdl-progress>
+            <br><br>
+
+            <h4>Texareas</h4>
+            <div hljs hljs-language="html"><mdl-text-area label="Label here"></mdl-text-area></div>
+            <mdl-text-area label="Label here"></mdl-text-area>
+            <br><br>
+
+            <h4>Spinners</h4>
+            <div hljs hljs-language="html"><mdl-spinner></mdl-spinner>
+<mdl-spinner single-color="true"></mdl-spinner></div>
+            <mdl-spinner></mdl-spinner>
+            <br>
+            <mdl-spinner single-color="true"></mdl-spinner>
+          </div>
+        </section>
+      </div>
+      <div class="mdl-layout__tab-panel" id="upgrading_components">
+        <section class="section--center mdl-grid mdl-grid--no-spacing">
+          <div class="mdl-cell mdl-cell--12-col">
+            <h4>Upgrading Components</h4>
+            MDL Components inside <strong>ng-if</strong> or <strong>dynamic templates</strong> needs to be manually upgraded as per the [MDL docs](http://www.getmdl.io/started/index.html#dynamic)<br>
+            You can use the <strong>mdl-upgrade</strong> attribute directive on elements that needs to be manually upgraded.<br>
+
+            <div hljs hljs-language="html"><mdl-button-raised mdl-upgrade ng-if="!!show">Component upgraded</mdl-button-raised></div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer class="mdl-mini-footer">
+      <div class="mdl-mini-footer--left-section">
+        <div class="mdl-logo">ng-mdl</div>
+        <ul class="mdl-mini-footer--link-list">
+          <li><a href="https://github.com/sydev/ng-mdl">Source</a></li>
+        </ul>
+      </div>
+    </footer>
+  </div>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/highlight.min.js"></script>
+  <script src="vendor/angular/angular.min.js"></script>
+  <script src="vendor/material-design-lite/material.min.js"></script>
+  <script src="vendor/angular-highlightjs/angular-highlightjs.min.js"></script>
+  <script src="js/ng-mdl.min.js"></script>
+  <script>angular.module('app', ['hljs' ,'ng.mdl']);</script>
+</body>
+</html>
