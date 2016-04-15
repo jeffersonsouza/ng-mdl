@@ -1,5 +1,12 @@
 var ngMdl = angular.module('ng.mdl', []);
 
+ngMdl.run([function() {
+  var head = angular.element(document.querySelector('head')),
+    rippleStyle = '<style>.ripple{position:absolute;opacity:.5;filter:alpha(opacity=50);border-radius:100%;pointer-events:none;-webkit-transform:scale(0);-ms-transform:scale(0);transform:scale(0)}.ripple.show{-webkit-animation-name:ripple;animation-name:ripple;-webkit-animation-duration:.5s;animation-duration:.5s;-webkit-animation-timing-function:ease-out;animation-timing-function:ease-out}@-webkit-keyframes ripple{to{-webkit-transform:scale(1.5);transform:scale(1.5);opacity:0;filter:alpha(opacity=0)}}@keyframes ripple{to{-webkit-transform:scale(1.5);transform:scale(1.5);opacity:0;filter:alpha(opacity=0)}}</style>';
+
+  head.append(rippleStyle);
+}]);
+
 ngMdl.provider('mdlConfig', [function() {
   var provider = this;
 
@@ -11,41 +18,29 @@ ngMdl.provider('mdlConfig', [function() {
   };
 }]);
 
-ngMdl.directive('mdlButtonRaised', ['mdlConfig', function(mdlConfig) {
-  return {
-    restrict: '',
-    template: '<button class="mdl-button mdl-js-button mdl-button--raised" ng-class="ngClass" ng-disabled="ngDisabled" ng-transclude></button>',
-    scope: {
-      ngModel: '=',
-      ngDisabled: '='
-    },
-    transclude: true,
-    link: function($scope, el, $attrs) {
-      el.css('display', 'inline-block');
-      $scope.ngClass = {
-        'mdl-js-ripple-effect': mdlConfig.rippleEffect,
-        'mdl-button--primary': $attrs.theme === 'primary',
-        'mdl-button--accent': $attrs.theme === 'accent'
-      };
-    }
-  };
-}]);
-
 ngMdl.directive('mdlButton', ['mdlConfig', function(mdlConfig) {
   return {
     restrict: 'E',
-    template: '<button class="mdl-button mdl-js-button" ng-class="ngClass" ng-disabled="ngDisabled" ng-transclude></button>',
+    require: '^?mdlRipple',
+    template: '<button mdl-ripple="ripple" class="mdl-button" ng-class="ngClass" ng-disabled="ngDisabled" ng-transclude><i ng-if="type === \'fab\' || type === \'icon\' || type === \'mini-fab\'" class="material-icons">{{icon}}</i></button>',
     scope: {
+      type: '@',
+      icon: '@',
       ngModel: '=',
-      ngDisabled: '='
+      ngDisabled: '=',
+      ripple: '='
     },
     transclude: true,
-    link: function($scope, el, $attrs) {
-      el.css('display', 'inline-block');
-      $scope.ngClass = {
-        'mdl-js-ripple-effect': mdlConfig.rippleEffect,
-        'mdl-button--primary': $attrs.theme === 'primary',
-        'mdl-button--accent': $attrs.theme === 'accent'
+    link: function(scope, ele, attrs) {
+
+      scope.ripple = (angular.isDefined(scope.ripple)) ? scope.ripple : mdlConfig.rippleEffect;
+      scope.ngClass = {
+        'mdl-button--primary': attrs.theme === 'primary',
+        'mdl-button--accent': attrs.theme === 'accent',
+        'mdl-button--fab': scope.type === 'fab' || scope.type === 'mini-fab',
+        'mdl-button--icon': scope.type === 'icon',
+        'mdl-button--mini-fab': scope.type === 'mini-fab',
+        'mdl-button--raised': scope.type === 'raised'
       };
     }
   };
@@ -63,6 +58,23 @@ ngMdl.directive('mdlCheckbox', ['mdlConfig', function(mdlConfig) {
       $scope.ngClass = {
         'mdl-js-ripple-effect': mdlConfig.rippleEffect
       };
+    }
+  };
+}]);
+
+ngMdl.directive('mdlFixedHeader', ['mdlConfig', function(mdlConfig) {
+  return {
+    restrict: 'A',
+    scope: {},
+    link: function(scope, ele, attrs){
+      ele.css({
+        display: 'block',
+        position: 'fixed'
+      });
+
+      ele.next().css({
+        marginTop: '60px'
+      });
     }
   };
 }]);
@@ -168,6 +180,51 @@ ngMdl.directive('mdlRadio', ['mdlConfig', function(mdlConfig) {
   };
 }]);
 
+ngMdl.directive('mdlRipple', ['mdlConfig', '$timeout', function(mdlConfig, $timeout) {
+  return {
+    restrict: 'AC',
+    link: function(scope, ele, attrs) {
+      var rect, ripple, top, left, color, wh;
+
+			ele.css({
+				overflow: 'hidden',
+				position: 'relative'
+			});
+
+			ele.on('click', function(event) {
+        var target = (event.target.nodeName === 'I') ? event.target.parentNode : event.target;
+
+        if (scope.ripple) {
+          rect = target.getBoundingClientRect();
+  				ripple = angular.element(ele[0].querySelector('.ripple'));
+
+          if (ripple.length === 0 || !ripple.hasClass('ripple')) {
+  					wh = Math.max(rect.width, rect.height);
+  					ripple = angular.element(document.createElement('span'));
+  					ripple.addClass('ripple');
+  					ripple.css({
+  						width: wh + 'px',
+  						height: wh + 'px'
+  					});
+  					ele.append(ripple);
+  				}
+
+          ripple.removeClass('show');
+  				top = event.layerY - ripple[0].clientHeight / 2;
+  				left = event.layerX - ripple[0].clientWidth / 2;
+  				color = getComputedStyle(ele[0]).color;
+  				ripple.css({
+  				  top: top + 'px',
+  				  left: left + 'px',
+  					background: color
+  				});
+  				ripple.addClass('show');
+        }
+			});
+		}
+  };
+}]);
+
 ngMdl.directive('mdlSpinner', ['mdlConfig', function(mdlConfig) {
   return {
     restrict: 'E',
@@ -186,28 +243,95 @@ ngMdl.directive('mdlSpinner', ['mdlConfig', function(mdlConfig) {
 ngMdl.directive('mdlSwitch', ['mdlConfig', function(mdlConfig) {
   return {
     restrict: 'E',
-    template: '<label class="mdl-switch mdl-js-switch" ng-class="ngClass"><input type="checkbox" ng-model="ngModel" class="mdl-switch__input" ng-checked="ngModel" /><span class="mdl-switch__label">{{label}}</span></label>',
+    replace: true,
+    template: '<label class="mdl-switch is-upgraded" ng-class="ngClass"><input type="checkbox" ng-model="ngModel" class="mdl-switch__input" ng-checked="ngModel" /><span class="mdl-switch__label">{{label}}</span></label>',
     scope: {
       ngModel: '='
     },
-    link: function($scope, el, $attrs) {
-      $scope.label = $attrs.label;
-      $scope.ngClass = {
-        'mdl-js-ripple-effect': mdlConfig.rippleEffect
-      };
-      $scope.$watch(function() {
-        return $scope.ngModel;
-      }, function(newValue) {
-        if (!el[0].childNodes[0] || !el[0].childNodes[0].MaterialSwitch) {
-          return false;
-        }
+    link: function(scope, ele, attrs) {
+      var switchTrack = angular.element(document.createElement('span')),
+        switchThumb = angular.element(document.createElement('span')),
+        checkbox = ele.find('input');
 
-        if (newValue) {
-          el[0].childNodes[0].MaterialSwitch.on();
+      switchTrack.addClass('mdl-switch__track');
+      switchThumb.addClass('mdl-switch__thumb');
+
+      ele.append(switchTrack);
+      ele.append(switchThumb);
+
+      scope.label = attrs.label;
+
+      toggleSwitch(scope.ngModel);
+
+      checkbox.on('change', function() {
+        toggleSwitch(this.checked);
+      });
+
+
+      function toggleSwitch(bool) {
+        if (bool) {
+          ele.addClass('is-checked');
         } else {
-          el[0].childNodes[0].MaterialSwitch.off();
+          ele.removeClass('is-checked');
+        }
+      }
+
+
+    }
+  };
+}]);
+
+ngMdl.directive('mdlTabs', ['mdlConfig', function(mdlConfig) {
+  return {
+    restrict: 'E',
+    replace: true,
+    transclude: true,
+    template: '<div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect"><div class="mdl-tabs__tab-bar"><a class="mdl-tabs__tab" ng-class="{\'is-active\': pane.selected}" ng-repeat="pane in panes" ng-click="select(pane)">{{pane.title}}</a></div><ng-transclude /></div>',
+    scope: {},
+    controller: ['$scope', function($scope){
+      var panes = this.panes = $scope.panes = [];
+
+      $scope.select = this.select = function(pane) {
+        angular.forEach(panes, function(pane) {
+          pane.selected = false;
+        });
+        pane.selected = true;
+        $scope.$broadcast('paneChange', pane.$id);
+      };
+
+      this.addPane = function(pane) {
+        if (panes.length === 0) {
+          $scope.select(pane);
+        }
+        panes.push(pane);
+      };
+    }]
+  };
+}])
+.directive('mdlPane', ['mdlConfig', function(mdlConfig) {
+  return {
+    require: '^^mdlTabs',
+    restrict: 'E',
+    replace: true,
+    transclude: true,
+    template: '<div class="mdl-tabs__panel" ng-transclude></div>',
+    scope: {
+      title: '@'
+    },
+    link: function(scope, el, $attrs, tabsCtrl) {
+      tabsCtrl.addPane(scope);
+
+      scope.$on('paneChange', function(e, id) {
+        if (scope.$id == id) {
+          el.addClass('is-active');
+        } else {
+          el.removeClass('is-active');
         }
       });
+
+      scope.isSelected = function() {
+        return scope.selected;
+      };
     }
   };
 }]);

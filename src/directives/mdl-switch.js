@@ -1,28 +1,40 @@
 ngMdl.directive('mdlSwitch', ['mdlConfig', function(mdlConfig) {
   return {
     restrict: 'E',
-    template: '<label class="mdl-switch mdl-js-switch" ng-class="ngClass"><input type="checkbox" ng-model="ngModel" class="mdl-switch__input" ng-checked="ngModel" /><span class="mdl-switch__label">{{label}}</span></label>',
+    replace: true,
+    template: '<label class="mdl-switch is-upgraded" ng-class="ngClass"><input type="checkbox" ng-model="ngModel" class="mdl-switch__input" ng-checked="ngModel" /><span class="mdl-switch__label">{{label}}</span></label>',
     scope: {
       ngModel: '='
     },
-    link: function($scope, el, $attrs) {
-      $scope.label = $attrs.label;
-      $scope.ngClass = {
-        'mdl-js-ripple-effect': mdlConfig.rippleEffect
-      };
-      $scope.$watch(function() {
-        return $scope.ngModel;
-      }, function(newValue) {
-        if (!el[0].childNodes[0] || !el[0].childNodes[0].MaterialSwitch) {
-          return false;
-        }
+    link: function(scope, ele, attrs) {
+      var switchTrack = angular.element(document.createElement('span')),
+        switchThumb = angular.element(document.createElement('span')),
+        checkbox = ele.find('input');
 
-        if (newValue) {
-          el[0].childNodes[0].MaterialSwitch.on();
-        } else {
-          el[0].childNodes[0].MaterialSwitch.off();
-        }
+      switchTrack.addClass('mdl-switch__track');
+      switchThumb.addClass('mdl-switch__thumb');
+
+      ele.append(switchTrack);
+      ele.append(switchThumb);
+
+      scope.label = attrs.label;
+
+      toggleSwitch(scope.ngModel);
+
+      checkbox.on('change', function() {
+        toggleSwitch(this.checked);
       });
+
+
+      function toggleSwitch(bool) {
+        if (bool) {
+          ele.addClass('is-checked');
+        } else {
+          ele.removeClass('is-checked');
+        }
+      }
+
+
     }
   };
 }]);

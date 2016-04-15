@@ -9,6 +9,7 @@
 
   gulp.task('watch', () => {
     gulp.watch('src/**/*.js', ['build']);
+    gulp.watch('docs/index.html', connect.reload());
   });
 
   gulp.task('serve', () => {
