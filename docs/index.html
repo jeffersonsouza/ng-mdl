@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" ng-app="app">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -14,92 +14,41 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/styles/github.min.css">
   </head>
 
-  <body ng-app="app" class="mdl-color--grey-100 mdl-color-text--grey-700">
+  <body ng-controller="demoCtrl" class="mdl-color--grey-100 mdl-color-text--grey-700" ng-cloak>
 
-    <div class="mdl-layout">
-      <header class="mdl-layout__header" mdl-fixed-header>
-        <div class="mdl-layout__header-row">
-          <span class="mdl-layout-title">ng-mdl</span>
-          <div class="mdl-layout-spacer"></div>
-          <nav class="mdl-navigation">
-            <a class="mdl-navigation__link" href="#overview">Overview</a>
-            <a class="mdl-navigation__link" href="#install">Install</a>
-            <a class="mdl-navigation__link" href="#components">Components</a>
-            <a class="mdl-navigation__link" href="">Link</a>
-          </nav>
-        </div>
-      </header>
+    <mdl-navigation-layout title="ng-mdl" has-drawer fixed-drawer>
+      <mdl-drawer title="ng-mdl">
+        <nav class="mdl-navigation">
+          <ul class="demo-main-nav__list-level-1">
+            <li class="demo-navigation__link" ng-click="this.$parent.$parent.closeDrawer()" ui-sref="overview">Overview</li>
+            <li class="demo-navigation__link" ng-click="this.$parent.$parent.closeDrawer()" ui-sref="install">Install</li>
+            <li class="demo-navigation__item">
+              <a href="" ng-click="toggleSubMenu($event)">Components</a>
+              <ul class="demo-main-nav__list-level-2">
+                <li class="demo-navigation__link" ng-click="this.$parent.$parent.closeDrawer()" ui-sref="components.buttons">Buttons</li>
+              </ul>
+            </li>
+          </ul>
+        </nav>
+      </mdl-drawer>
+      <main class="mdl-layout__content" ui-view></main>
+    </mdl-navigation-layout>
 
-      <main class="mdl-layout__content demo-content">
-        <h2 id="overview">Overview</h2>
-        <section class="mdl-grid mdl-grid--no-spacing mdl-shadow--2dp section-center">
-          <header class="overview-header mdl-cell mdl-cell--3-col-desktop mdl-cell--2-col-tablet mdl-cell--4-col-phone mdl-color--teal-100"></header>
-          <div class="mdl-card mdl-cell mdl-cell--9-col-desktop mdl-cell--6-col-tablet mdl-cell--4-col-phone">
-            <div class="mdl-card__supporting-text">
-              <h4>ng-mdl</h4>
-              <p>ng-mdl is an angular wrapper for Material Design Lite Framework from Google.</p>
-            </div>
-          </div>
-        </section>
-
-        <h2 id="install">Install</h2>
-        <section class="mdl-grid mdl-grid--no-spacing mdl-shadow--2dp section-center">
-          <header class="overview-header mdl-cell mdl-cell--3-col-desktop mdl-cell--2-col-tablet mdl-cell--4-col-phone mdl-color--teal-100"></header>
-          <div class="mdl-card mdl-cell mdl-cell--9-col-desktop mdl-cell--6-col-tablet mdl-cell--4-col-phone">
-            <div class="mdl-card__supporting-text">
-              <h4>ng-mdl</h4>
-              <p>ng-mdl is an angular wrapper for Material Design Lite Framework from Google.</p>
-            </div>
-          </div>
-        </section>
-
-        <h2 id="components">Components</h2>
-        <section class="mdl-grid">
-          <div class="mdl-typography--display-1 mdl-cell mdl-cell--12-col">Buttons</div>
-          <section id="buttons" class="mdl-grid mdl-cell mdl-cell--12-col" ng-init="rippleStatus = true">
-            <div class="mdl-cell mdl-cell--12-col">
-              <mdl-switch ng-model="rippleStatus" label="Ripple"></mdl-switch>
-            </div>
-            <div class="mdl-cell mdl-cell--12-col">
-              <mdl-button type="flat" ripple="rippleStatus">Button</mdl-button>
-              <mdl-button type="flat" theme="primary" ripple="rippleStatus">Primary Button</mdl-button>
-              <mdl-button type="flat" theme="accent" ripple="rippleStatus">Accent Button</mdl-button>
-            </div>
-            <div class="mdl-cell mdl-cell--12-col">
-              <mdl-button type="raised" ripple="rippleStatus">Button</mdl-button>
-              <mdl-button type="raised" theme="primary" ripple="rippleStatus">Primary Button</mdl-button>
-              <mdl-button type="raised" theme="accent" ripple="rippleStatus">Accent Button</mdl-button>
-            </div>
-            <div class="mdl-cell mdl-cell--12-col">
-              <mdl-button type="fab" icon="add" ripple="rippleStatus"></mdl-button>
-              <mdl-button type="fab" icon="add" theme="primary" ripple="rippleStatus"></mdl-button>
-              <mdl-button type="fab" icon="add" theme="accent" ripple="rippleStatus"></mdl-button>
-            </div>
-            <div class="mdl-cell mdl-cell--12-col">
-              <mdl-button type="icon" icon="mood" ripple="rippleStatus"></mdl-button>
-              <mdl-button type="icon" icon="mood" theme="primary" ripple="rippleStatus"></mdl-button>
-              <mdl-button type="icon" icon="mood" theme="accent" ripple="rippleStatus"></mdl-button>
-            </div>
-            <div class="mdl-cell mdl-cell--12-col">
-              <mdl-button type="mini-fab" icon="add" ripple="rippleStatus"></mdl-button>
-              <mdl-button type="mini-fab" icon="add" theme="primary" ripple="rippleStatus"></mdl-button>
-              <mdl-button type="mini-fab" icon="add" theme="accent" ripple="rippleStatus"></mdl-button>
-            </div>
-          </section>
-
-          <div class="mdl-typography--display-1 mdl-cell mdl-cell--12-col"></div>
-
-        </section>
-      </main>
-
-
-
-    </div>
+    <footer class="mdl-mini-footer">
+      <div class="mdl-mini-footer__left-section">
+        <div class="mdl-logo">Title</div>
+        <ul class="mdl-mini-footer__link-list">
+          <li><a href="#">Help</a></li>
+          <li><a href="#">Privacy & Terms</a></li>
+        </ul>
+      </div>
+    </footer>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/highlight.min.js"></script>
     <script src="vendor/angular/angular.js"></script>
+    <script src="vendor/angular-ui-router/release/angular-ui-router.min.js"></script>
     <script src="vendor/angular-highlightjs/angular-highlightjs.min.js"></script>
     <script src="js/ng-mdl.min.js"></script>
-    <script>angular.module('app', ['hljs' ,'ng.mdl']);</script>
+    <script src="js/app.js"></script>
   </body>
 </html>

@@ -2,6 +2,34 @@ html, body {
   font-family: 'Roboto', 'Helvetica', sans-serif;
   margin: 0;
   padding: 0;
+  min-height: 100vh;
+}
+
+.demo-main-nav__list-level-1,
+.demo-main-nav__list-level-2 {
+  padding: 0;
+  margin: 0;
+}
+.demo-navigation__link,
+.demo-navigation__item {
+  position: relative;
+  padding: 8px 24px;
+  margin-bottom: 0;
+  line-height: 24px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.demo-main-nav__list-level-2 {
+  position: absolute;
+  top: 40px;
+  left: 0;
+  transform: scale(0);
+  transform-origin: 0 0;
+  transition: transform .3s;
+}
+.demo-main-nav__list-level-2.is-visible {
+  transform: scale(1);
 }
 
 .mdl-layout__content {

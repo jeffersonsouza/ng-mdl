@@ -2,7 +2,7 @@ var ngMdl = angular.module('ng.mdl', []);
 
 ngMdl.run([function() {
   var head = angular.element(document.querySelector('head')),
-    rippleStyle = '<style>.ripple{position:absolute;opacity:.5;filter:alpha(opacity=50);border-radius:100%;pointer-events:none;-webkit-transform:scale(0);-ms-transform:scale(0);transform:scale(0)}.ripple.show{-webkit-animation-name:ripple;animation-name:ripple;-webkit-animation-duration:.5s;animation-duration:.5s;-webkit-animation-timing-function:ease-out;animation-timing-function:ease-out}@-webkit-keyframes ripple{to{-webkit-transform:scale(1.5);transform:scale(1.5);opacity:0;filter:alpha(opacity=0)}}@keyframes ripple{to{-webkit-transform:scale(1.5);transform:scale(1.5);opacity:0;filter:alpha(opacity=0)}}</style>';
+    rippleStyle = '<style>.ripple{position:absolute;opacity:.5;filter:alpha(opacity=50);border-radius:100%;pointer-events:none;-webkit-transform:scale(0);-ms-transform:scale(0);transform:scale(0)}.ripple.show{-webkit-animation-name:ripple;animation-name:ripple;-webkit-animation-duration:.5s;animation-duration:.5s;-webkit-animation-timing-function:ease-out;animation-timing-function:ease-out}@-webkit-keyframes ripple{to{-webkit-transform:scale(1.5);transform:scale(1.5);opacity:0;filter:alpha(opacity=0)}}@keyframes ripple{to{-webkit-transform:scale(2.5);transform:scale(2.5);opacity:0;filter:alpha(opacity=0)}}</style>';
 
   head.append(rippleStyle);
 }]);
@@ -62,6 +62,52 @@ ngMdl.directive('mdlCheckbox', ['mdlConfig', function(mdlConfig) {
   };
 }]);
 
+ngMdl.directive('mdlDrawer', ['mdlConfig', '$timeout', function(mdlConfig, $timeout) {
+  return {
+    restrict: 'E',
+    require: '^?mdlNavigationLayout',
+    replace: true,
+    transclude: true,
+    scope: {
+      title: '@',
+      items: '='
+    },
+    link: function(scope, ele, attrs, navLayoutCtrl) {
+      var body = angular.element(document.body),
+        obfuscator = angular.element(document.createElement('div')),
+        navLinks;
+
+      scope.openDrawer = function() {
+        ele.addClass('is-visible');
+        obfuscator.addClass('is-visible');
+      };
+
+      scope.closeDrawer = function() {
+        ele.removeClass('is-visible');
+        obfuscator.removeClass('is-visible');
+      };
+
+      $timeout(function() {
+         navLinks = angular.element(ele[0].querySelectorAll('.mdl-navigation__link'));
+         navLinks.on('click', scope.closeDrawer);
+      });
+
+      obfuscator.addClass('mdl-layout__obfuscator');
+      obfuscator.on('click', scope.closeDrawer);
+      body.append(obfuscator);
+
+      scope.$on('drawerOpened', scope.openDrawer);
+    },
+    template: '<div class="mdl-layout__drawer">'+
+      '<span class="mdl-layout-title">{{title}}</span>'+
+      '<nav class="mdl-navigation">'+
+        '<div ng-if="!items" ng-transclude></div>'+
+        '<a ng-if="items" ng-click="closeDrawer()" class="mdl-navigation__link" href="{{item.href}}" ng-repeat="item in items track by $index">{{item.title}}</a>'+
+      '</nav>'+
+    '</div>'
+  };
+}]);
+
 ngMdl.directive('mdlFixedHeader', ['mdlConfig', function(mdlConfig) {
   return {
     restrict: 'A',
@@ -80,6 +126,42 @@ ngMdl.directive('mdlFixedHeader', ['mdlConfig', function(mdlConfig) {
 }]);
 
 ngMdl.directive('mdlNavigationLayout', ['mdlConfig', function(mdlConfig) {
+  return {
+    restrict: 'EAC',
+    transclude: true,
+    replace: true,
+    scope: {
+      title: '@'
+    },
+    controller: ['$scope', function($scope) {
+      $scope.openDrawer = this.openDrawer = function() {
+        $scope.$broadcast('drawerOpened');
+      };
+    }],
+    link: function(scope, ele, attrs, ctrl, transclude) {
+      ele.append(transclude());
+
+      scope.showHeader = angular.isUndefined(attrs.headerHidden);
+
+      // Drawer hamburger button
+      scope.hasDrawer = angular.isDefined(attrs.hasDrawer);
+
+      scope.layoutClasses = {
+        'mdl-layout--fixed-drawer': scope.hasDrawer && angular.isDefined(attrs.fixedDrawer)
+      };
+    },
+    template: '<div class="mdl-layout mdl-layout--fixed-header" ng-class="layoutClasses">'+
+        '<header class="mdl-layout__header" ng-show="showHeader">'+
+          '<div ng-if="hasDrawer" ng-click="openDrawer()" role="button" tabindex="0" class="mdl-layout__drawer-button"><i class="material-icons">menu</i></div>'+
+          '<div class="mdl-layout__header-row">'+
+            '<span class="mdl-layout-title">{{title}}</span>'+
+          '</div>'+
+        '</header>'+
+      '</div>'
+  };
+}]);
+
+/*ngMdl.directive('mdlNavigationLayout', ['mdlConfig', function(mdlConfig) {
   return {
     restrict: 'E',
     transclude: true,
@@ -135,7 +217,7 @@ ngMdl.directive('mdlNavigationLayout', ['mdlConfig', function(mdlConfig) {
       };
     }
   };
-}]);
+}]);*/
 
 ngMdl.directive('mdlProgress', ['mdlConfig', function(mdlConfig) {
   return {
@@ -188,7 +270,8 @@ ngMdl.directive('mdlRipple', ['mdlConfig', '$timeout', function(mdlConfig, $time
 
 			ele.css({
 				overflow: 'hidden',
-				position: 'relative'
+				position: 'relative',
+        transform: 'translateZ(0)'
 			});
 
 			ele.on('click', function(event) {
@@ -210,8 +293,8 @@ ngMdl.directive('mdlRipple', ['mdlConfig', '$timeout', function(mdlConfig, $time
   				}
 
           ripple.removeClass('show');
-  				top = event.layerY - ripple[0].clientHeight / 2;
-  				left = event.layerX - ripple[0].clientWidth / 2;
+  				top = event.offsetY - ripple[0].clientHeight / 2;
+  				left = event.offsetX - ripple[0].clientWidth / 2;
   				color = getComputedStyle(ele[0]).color;
   				ripple.css({
   				  top: top + 'px',

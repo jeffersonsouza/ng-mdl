@@ -1,5 +1,41 @@
 ngMdl.directive('mdlNavigationLayout', ['mdlConfig', function(mdlConfig) {
   return {
+    restrict: 'EAC',
+    transclude: true,
+    replace: true,
+    scope: {
+      title: '@'
+    },
+    controller: ['$scope', function($scope) {
+      $scope.openDrawer = this.openDrawer = function() {
+        $scope.$broadcast('drawerOpened');
+      };
+    }],
+    link: function(scope, ele, attrs, ctrl, transclude) {
+      ele.append(transclude());
+
+      scope.showHeader = angular.isUndefined(attrs.headerHidden);
+
+      // Drawer hamburger button
+      scope.hasDrawer = angular.isDefined(attrs.hasDrawer);
+
+      scope.layoutClasses = {
+        'mdl-layout--fixed-drawer': scope.hasDrawer && angular.isDefined(attrs.fixedDrawer)
+      };
+    },
+    template: '<div class="mdl-layout mdl-layout--fixed-header" ng-class="layoutClasses">'+
+        '<header class="mdl-layout__header" ng-show="showHeader">'+
+          '<div ng-if="hasDrawer" ng-click="openDrawer()" role="button" tabindex="0" class="mdl-layout__drawer-button"><i class="material-icons">menu</i></div>'+
+          '<div class="mdl-layout__header-row">'+
+            '<span class="mdl-layout-title">{{title}}</span>'+
+          '</div>'+
+        '</header>'+
+      '</div>'
+  };
+}]);
+
+/*ngMdl.directive('mdlNavigationLayout', ['mdlConfig', function(mdlConfig) {
+  return {
     restrict: 'E',
     transclude: true,
     template: '<div class="mdl-layout mdl-js-layout {{classlist}}" ' +
@@ -54,4 +90,4 @@ ngMdl.directive('mdlNavigationLayout', ['mdlConfig', function(mdlConfig) {
       };
     }
   };
-}]);
+}]);*/

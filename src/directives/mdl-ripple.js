@@ -6,7 +6,8 @@ ngMdl.directive('mdlRipple', ['mdlConfig', '$timeout', function(mdlConfig, $time
 
 			ele.css({
 				overflow: 'hidden',
-				position: 'relative'
+				position: 'relative',
+        transform: 'translateZ(0)'
 			});
 
 			ele.on('click', function(event) {
@@ -28,8 +29,8 @@ ngMdl.directive('mdlRipple', ['mdlConfig', '$timeout', function(mdlConfig, $time
   				}
 
           ripple.removeClass('show');
-  				top = event.layerY - ripple[0].clientHeight / 2;
-  				left = event.layerX - ripple[0].clientWidth / 2;
+  				top = event.offsetY - ripple[0].clientHeight / 2;
+  				left = event.offsetX - ripple[0].clientWidth / 2;
   				color = getComputedStyle(ele[0]).color;
   				ripple.css({
   				  top: top + 'px',

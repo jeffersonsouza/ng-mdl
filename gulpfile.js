@@ -6,6 +6,7 @@
   const connect = require('gulp-connect');
   const rename  = require('gulp-rename');
   const uglify  = require('gulp-uglify');
+  const Server = require('karma').Server;
 
   gulp.task('watch', () => {
     gulp.watch('src/**/*.js', ['build']);
@@ -28,6 +29,12 @@
       .pipe(gulp.dest('dist'))
       .pipe(gulp.dest('docs/js'))
       .pipe(connect.reload());
+  });
+
+  gulp.task('test', (done) => {
+    new Server({
+      configFile: __dirname +'/karma.conf.js'
+    }, done).start();
   });
 
   gulp.task('default', ['build', 'watch', 'serve']);
